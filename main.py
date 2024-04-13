@@ -13,7 +13,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 
 from train_ import read_pdf, read_docx, read_rtf, is_word_file, read_file, del_NER, clean
-from striprtf.striprtf import rtf_to_text
+from striprtf.striprtf import rtf_to_text 
 
 
 def read_rtf_main(file_path):
