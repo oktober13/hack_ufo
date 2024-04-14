@@ -5,8 +5,6 @@ import time
 import csv
 
 from main import read_file_draft, vectorize, del_NER, clean
-# либы неявно вызываются в пайплайне, поэтому нужны тут
-# иначе ошибка
 import os
 
 import uvicorn
@@ -42,11 +40,7 @@ model = joblib.load('pipelines\pipe_cl.pkl')
 app = FastAPI()
 TMP_UPLOADS_DIRECTORY = 'uploads'
 
-# app.mount("/static", StaticFiles(directory="static"), name="static")
-
 templates = Jinja2Templates(directory="templates")
-
-# model = joblib.load('pipe_cl.pkl')
 
 @app.get("/", response_class=HTMLResponse)
 async def read_item(request: Request):
