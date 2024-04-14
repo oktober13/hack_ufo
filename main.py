@@ -23,10 +23,6 @@ def read_rtf_main(file_path):
         text = rtf_to_text(content)
         return [text]
 
-# по факту - read_file_draft - теперь правильно работает
-# отдает на выход только инфу внутри дока,
-# которая потом идет на пайплайн и там уже крутится обрабатывается - или нет - читай дальше
-# и попадает к модели, которая предсказывает че-каво 
 def read_file_draft(file_path):
     # file_name = file_path.split('\\')[-1]
     file_ext = file_path.split('.')[-1]
@@ -62,21 +58,6 @@ def main():
     mlp_model = joblib.load('models\mlp_0.97.pkl')
     mnb_model = joblib.load('models\mnb_0.8.pkl')
 
-# tfidf загружается в функции vectorize
-# потому что по другому (если отсюда его вызывать) - он не работает
-
-    # tfidf = joblib.load('tfidf.pkl')
-
-# попытка присобачить read_file_draft в пайплайн > не правильно, потому что .....
-
-    # reading_doc = Pipeline(steps=[
-    #     ('read', read_file_draft),
-    # ])
-
-# Read file draft не должен быть тут вообще в пайплайне
-# он должен быть при загрузке доков на сайт, чтобы эта функция читала расширение дока и уже 
-# передавала в пайплайн просто внутренние данные
-# cl - с очисткой (cleaning)
     pipe_cl = Pipeline(steps=[
         # ('reading', FunctionTransformer(read_file_draft)),
         ('del_NER', FunctionTransformer(del_NER)),
