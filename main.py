@@ -13,7 +13,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import FunctionTransformer
 
-from train_ import read_pdf, read_docx, read_rtf, is_word_file, read_file, del_NER, clean
+from train_ import read_pdf, read_docx, is_word_file, del_NER, clean
 from striprtf.striprtf import rtf_to_text
 
 
@@ -91,23 +91,6 @@ def main():
         ('classifier', svc_model)
     ])
     joblib.dump(pipe_cl, 'pipelines\pipe_cl.pkl')
-
-    # # ---------------------------------------------------------------------
-    # data = pd.read_csv('data\data_clean.csv')
-
-    # x = data['text']
-    # y = data['class']
-    # pipe_cl.fit(x, y)
-    # # как я понимаю пайплайн надо еще обучить, потому что внутри у нас тупа наученные модельки
-    # # что "не работает" что ли я хз 
-    # # ---------------------------------------------------------------------
-    # joblib.dump(pipe_cl, 'pipelines\pipe_cl.pkl')
-    # joblib.dump(pipe_no_cl, 'pipelines\pipe_no_cl.pkl')
-    # # ---------------------------------------------------------------------
-
-    # data = read_file_draft(path)
-    # print(pipe_cl.predict(data))
-
 
 # попытка сделать голосовалку - я не знаю как сделать так, 
 # чтобы несколько моделей сразу голосовали и давали усреднёнку

@@ -1,5 +1,7 @@
 import joblib
 from main import read_file_draft, vectorize, del_NER, clean
+# либы неявно вызываются в пайплайне, поэтому нужны тут
+# иначе ошибка
 import os
 
 # попытка загрузить модель 
