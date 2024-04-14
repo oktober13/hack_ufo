@@ -23,7 +23,10 @@ def read_rtf_main(file_path):
         text = rtf_to_text(content)
         return [text]
 
-
+# по факту - read_file_draft - теперь правильно работает
+# отдает на выход только инфу внутри дока,
+# которая потом идет на пайплайн и там уже крутится обрабатывается - или нет - читай дальше
+# и попадает к модели, которая предсказывает че-каво 
 def read_file_draft(file_path):
     file_name = file_path.split('\\')[-1]
     file_ext = file_path.split('.')[-1]
@@ -45,10 +48,11 @@ def read_file_draft(file_path):
     except Exception as e:
         print(e)
 
-
+# обученный векторизатор текста
+# передается в пайплайн
 def vectorize(text):
     tfidf = joblib.load('tfidf.pkl')
-    return [tfidf.transform(text).toarray()]
+    return tfidf.transform(text).toarray()
 
 
 def main():
@@ -56,12 +60,21 @@ def main():
     mlp_model = joblib.load('models\mlp_0.97.pkl')
     mnb_model = joblib.load('models\mnb_0.8.pkl')
 
+# tfidf загружается в функции vectorize
+# потому что по другому (если отсюда его вызывать) - он не работает
+
     # tfidf = joblib.load('tfidf.pkl')
+
+# попытка присобачить read_file_draft в пайплайн > не правильно, потому что .....
 
     # reading_doc = Pipeline(steps=[
     #     ('read', read_file_draft),
     # ])
 
+# Read file draft не должен быть тут вообще в пайплайне
+# он должен быть при загрузке доков на сайт, чтобы эта функция читала расширение дока и уже 
+# передавала в пайплайн просто внутренние данные
+# cl - с очисткой (cleaning)
     pipe_cl = Pipeline(steps=[
         # ('reading', FunctionTransformer(read_file_draft)),
         ('del_NER', FunctionTransformer(del_NER)),
@@ -69,7 +82,7 @@ def main():
         ('vectoring', FunctionTransformer(vectorize)),
         ('classifier', svc_model)
     ])
-
+# no_cl - без очистки
     pipe_no_cl = Pipeline(steps=[
         # ('reading', reading_doc),
         ('del_NER', FunctionTransformer(del_NER)),
@@ -83,6 +96,8 @@ def main():
     x = data['text']
     y = data['class']
     pipe_cl.fit(x, y)
+    # как я понимаю пайплайн надо еще обучить, потому что внутри у нас тупа наученные модельки
+    # что "не работает" что ли я хз 
     # ---------------------------------------------------------------------
     joblib.dump(pipe_cl, 'pipelines\pipe_cl.pkl')
     joblib.dump(pipe_no_cl, 'pipelines\pipe_no_cl.pkl')
@@ -91,6 +106,10 @@ def main():
     # data = read_file_draft(path)
     # print(pipe_cl.predict(data))
 
+
+# попытка сделать голосовалку - я не знаю как сделать так, 
+# чтобы несколько моделей сразу голосовали и давали усреднёнку
+# cl - с очисткой (cleaning)
     # pipe_cl_vote = Pipeline(steps=[
     #     ('reading', reading_doc),
     #     ('del_NER', del_NER),
@@ -99,6 +118,7 @@ def main():
     #     ('classifier', svc_model)
     # ])
 
+# no cl - без очистки
     # pipe_no_cl_vote = Pipeline(steps=[
     #     ('reading', reading_doc),
     #     ('del_NER', del_NER),
