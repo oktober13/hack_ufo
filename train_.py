@@ -81,7 +81,7 @@ def read_file(file_path, label_folder=None, file_ext=None):
         print(e)
 
 def del_NER(text):
-
+    nlp = sp.load('ru_core_news_lg')
     doc = nlp(text)
     for ent in doc.ents:
         text = text.replace(ent.text, '')
