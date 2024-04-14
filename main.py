@@ -28,7 +28,7 @@ def read_rtf_main(file_path):
 # которая потом идет на пайплайн и там уже крутится обрабатывается - или нет - читай дальше
 # и попадает к модели, которая предсказывает че-каво 
 def read_file_draft(file_path):
-    file_name = file_path.split('\\')[-1]
+    # file_name = file_path.split('\\')[-1]
     file_ext = file_path.split('.')[-1]
     try:
         if file_ext == 'rtf':
@@ -52,7 +52,7 @@ def read_file_draft(file_path):
 # передается в пайплайн
 def vectorize(text):
     tfidf = joblib.load('tfidf.pkl')
-    return tfidf.transform(text).toarray()
+    return tfidf.transform([text]).toarray()
 
 
 def main():
@@ -82,26 +82,28 @@ def main():
         ('vectoring', FunctionTransformer(vectorize)),
         ('classifier', svc_model)
     ])
-# no_cl - без очистки
+    joblib.dump(pipe_cl, 'pipelines\pipe_cl.pkl')
+
+# # no_cl - без очистки
     pipe_no_cl = Pipeline(steps=[
-        # ('reading', reading_doc),
         ('del_NER', FunctionTransformer(del_NER)),
         ('vectoring', FunctionTransformer(vectorize)),
         ('classifier', svc_model)
     ])
-
-    # ---------------------------------------------------------------------
-    data = pd.read_csv('data\data_clean.csv')
-
-    x = data['text']
-    y = data['class']
-    pipe_cl.fit(x, y)
-    # как я понимаю пайплайн надо еще обучить, потому что внутри у нас тупа наученные модельки
-    # что "не работает" что ли я хз 
-    # ---------------------------------------------------------------------
     joblib.dump(pipe_cl, 'pipelines\pipe_cl.pkl')
-    joblib.dump(pipe_no_cl, 'pipelines\pipe_no_cl.pkl')
-    # ---------------------------------------------------------------------
+
+    # # ---------------------------------------------------------------------
+    # data = pd.read_csv('data\data_clean.csv')
+
+    # x = data['text']
+    # y = data['class']
+    # pipe_cl.fit(x, y)
+    # # как я понимаю пайплайн надо еще обучить, потому что внутри у нас тупа наученные модельки
+    # # что "не работает" что ли я хз 
+    # # ---------------------------------------------------------------------
+    # joblib.dump(pipe_cl, 'pipelines\pipe_cl.pkl')
+    # joblib.dump(pipe_no_cl, 'pipelines\pipe_no_cl.pkl')
+    # # ---------------------------------------------------------------------
 
     # data = read_file_draft(path)
     # print(pipe_cl.predict(data))

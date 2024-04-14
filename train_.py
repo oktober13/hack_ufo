@@ -163,6 +163,7 @@ if __name__ == '__main__':
     y_pred_test = gnb.predict(X_test)
     gnb_f1 = f1_score(y_test, y_pred_test, average='micro')
     joblib.dump(gnb, f'models\gnb_{gnb_f1:.2}.pkl')
+    print('GaussianNB done')
 
 
     mnb = MultinomialNB()
@@ -170,6 +171,7 @@ if __name__ == '__main__':
     y_pred_test = mnb.predict(X_test)
     mnb_f1 = f1_score(y_test, y_pred_test, average='micro')
     joblib.dump(mnb, f'models\mnb_{mnb_f1:.2}.pkl')
+    print('MultinomialNB done')
 
 
     lr = LogisticRegression(random_state=42)
@@ -177,6 +179,7 @@ if __name__ == '__main__':
     y_pred_test = lr.predict(X_test)
     lr_f1 = f1_score(y_test, y_pred_test, average='micro')
     joblib.dump(lr, f'models\lr_{lr_f1:.2}.pkl')
+    print('LogisticRegression done')
 
 
     svc = LinearSVC(class_weight='balanced')
@@ -184,6 +187,7 @@ if __name__ == '__main__':
     y_pred_test = svc.predict(X_test)
     svc_f1 = f1_score(y_test, y_pred_test, average='micro')
     joblib.dump(svc, f'models\svc_{svc_f1:.2}.pkl')
+    print('LinearSVC done')
 
 
     dt = DecisionTreeClassifier(random_state=42)
@@ -191,17 +195,7 @@ if __name__ == '__main__':
     y_pred_test = dt.predict(X_test)
     dt_f1 = f1_score(y_test, y_pred_test, average='micro')
     joblib.dump(dt, f'models\dt_{dt_f1:.2}.pkl')
-
-
-    classifiers = [('Decision Tree', dt),
-                ('Logistic Regression', lr),
-                    ('Naive Bayes', gnb)
-                ]
-    vc = VotingClassifier(estimators=classifiers)
-    vc.fit(X_train, y_train)
-    y_pred_test = vc.predict(X_test)
-    vc_f1 = f1_score(y_test, y_pred_test, average='micro')
-    joblib.dump(vc, rf'models\vc_{vc_f1:.2}.pkl')
+    print('DecisionTree done')
 
 
     mlp = MLPClassifier(random_state=42)
@@ -209,6 +203,19 @@ if __name__ == '__main__':
     y_pred_test = mlp.predict(X_test)
     mlp_f1 = f1_score(y_test, y_pred_test, average='micro')
     joblib.dump(mlp, f'models\mlp_{mlp_f1:.2}.pkl')
+    print('MLPClassifier done')
+
+
+    classifiers = [('Decision Tree', svc),
+                ('Logistic Regression', mlp),
+                    ('Naive Bayes', mnb)
+                ]
+    vc = VotingClassifier(estimators=classifiers)
+    vc.fit(X_train, y_train)
+    y_pred_test = vc.predict(X_test)
+    vc_f1 = f1_score(y_test, y_pred_test, average='micro')
+    joblib.dump(vc, rf'models\vc_{vc_f1:.2}.pkl')
+    print('VotingClassifier done')
 
 
     lgbm = lgb.LGBMClassifier(random_state=42, verbose=-1)
@@ -216,3 +223,4 @@ if __name__ == '__main__':
     y_pred_test = lgbm.predict(X_test)
     lgbm_f1 = f1_score(y_test, y_pred_test, average='micro')
     joblib.dump(lgbm, f'models\lgbm_{lgbm_f1:.2}.pkl')
+    print('LGBMClassifier done')
