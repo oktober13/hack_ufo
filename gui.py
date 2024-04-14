@@ -65,6 +65,7 @@ async def upload_docs(
     
     # Создаем папку пользователя, если она не существует
     os.makedirs(user_directory, exist_ok=True)
+    os.makedirs(user_directory + '/buffer', exist_ok=True)
     
     docs_list = []
     predictions = []
@@ -74,7 +75,7 @@ async def upload_docs(
         filename = str(uuid4()) + '.docx'
         
         # Путь к файлу в папке пользователя
-        file_path = os.path.join(user_directory, filename)
+        file_path = os.path.join(user_directory + '/buffer', filename)
         
         docs_list.append(file_path)
         
@@ -85,8 +86,13 @@ async def upload_docs(
             
             
         doc = read_file_draft(file_path)
-        prediction = model.predict(doc)
-        predictions.append(ru_labels[prediction[0]])
+        file_name = os.path.basename(file_path)
+        print(file_name)
+        prediction = ru_labels[model.predict(doc)[0]]
+        next_file_path = user_directory + f'/{prediction}'
+        os.makedirs(next_file_path, exist_ok=True)
+        os.rename(file_path, next_file_path + f'/{file_name}')
+        predictions.append(prediction)
 
     print(predictions)
     # Формируем сообщение об успешной загрузке
