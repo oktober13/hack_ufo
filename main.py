@@ -94,8 +94,6 @@ def main():
     ])
     joblib.dump(pipe_cl, 'pipelines\pipe_cl.pkl')
 
-# попытка сделать голосовалку - я не знаю как сделать так, 
-# чтобы несколько моделей сразу голосовали и давали усреднёнку
 # cl - с очисткой (cleaning)
     # pipe_cl_vote = Pipeline(steps=[
     #     ('reading', reading_doc),

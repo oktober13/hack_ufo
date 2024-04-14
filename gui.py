@@ -24,17 +24,17 @@ from typing import List, Dict
 from uuid import uuid4
 
 ru_labels = {
-    "proxy" : 'доверенность',
-    'contract' : 'договор',
-    'act' : 'акт',
-    'application' : 'заявление',
-    'order' : 'приказ',
-    'invoice' : 'счет',
-    'bill' : 'приложение',
-    'arrangement' : 'соглашение',
-    'contract offer' : 'договор оферты',
-    'statute' : 'устав',
-    'determination' : 'решение'
+    "proxy": 'доверенность',
+    'contract': 'договор',
+    'act': 'акт',
+    'application': 'заявление',
+    'order': 'приказ',
+    'invoice': 'счет',
+    'bill': 'приложение',
+    'arrangement': 'соглашение',
+    'contract offer': 'договор оферты',
+    'statute': 'устав',
+    'determination': 'решение'
 }
 
 model = joblib.load('pipelines\pipe_cl.pkl')
@@ -65,7 +65,7 @@ async def upload_docs(
     
     # Создаем папку пользователя, если она не существует
     os.makedirs(user_directory, exist_ok=True)
-    os.makedirs(user_directory + '/buffer', exist_ok=True)
+    os.makedirs(user_directory + r'\buffer', exist_ok=True)
     
     docs_list = []
     predictions = []
@@ -96,10 +96,10 @@ async def upload_docs(
         doc = read_file_draft(file_path)
         file_name = os.path.basename(file_path)
         print(file_name)
-        prediction = ru_labels[model.predict(doc)[0]]
-        next_file_path = user_directory + f'/{prediction}'
+        prediction = ru_labels[model.predict(doc)[0].split('\\')[-1]]
+        next_file_path = user_directory + rf'\\{prediction}'
         os.makedirs(next_file_path, exist_ok=True)
-        os.rename(file_path, next_file_path + f'/{file_name}')
+        os.rename(file_path, next_file_path + rf'\\{file_name}')
         predictions.append(prediction)
 
     print(predictions)
