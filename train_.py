@@ -8,8 +8,6 @@ import re
 import joblib
 # -------------------------------------------
 import nltk
-# nltk.download("stopwords")
-# nltk.download('punkt')
 from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
 from nltk.tokenize import word_tokenize
@@ -117,11 +115,6 @@ def clean(doc):
     doc = ' '.join([stemmer.stem(token) for token in doc])
 
     return doc
-
-    # # Лемматизация
-    # morph = pymorphy2.MorphAnalyzer()
-    # lemmatized = [morph.parse(word)[0].normal_form for word in filtered_tokens]
-    # print(lemmatized)
 
 if __name__ == '__main__':
 
