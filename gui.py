@@ -71,11 +71,19 @@ async def upload_docs(
     predictions = []
 
     for doc in docs:
+        file_ext = doc.filename.split('.')[-1]
         # Генерируем уникальное имя файла
-        filename = str(uuid4()) + '.docx'
+        filename = ''
+        if file_ext == 'rtf':
+            filename = str(uuid4()) + '.rtf'
+        elif file_ext.lower() == 'pdf':
+            filename = str(uuid4()) + '.pdf'
+        elif file_ext in ['docx', 'doc']:
+            filename = str(uuid4()) + '.docx'
+        # Генерируем уникальное имя файла
         
         # Путь к файлу в папке пользователя
-        file_path = os.path.join(user_directory + '/buffer', filename)
+        file_path = os.path.join(user_directory + r'\buffer', filename)
         
         docs_list.append(file_path)
         

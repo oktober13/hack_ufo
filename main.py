@@ -30,10 +30,12 @@ def read_rtf_main(file_path):
 def read_file_draft(file_path):
     # file_name = file_path.split('\\')[-1]
     file_ext = file_path.split('.')[-1]
+    print(file_ext)
+    print(file_path)
     try:
         if file_ext == 'rtf':
             return read_rtf_main(file_path)[0]  # + [file_name]
-        elif file_ext == 'pdf':
+        elif file_ext.lower() == 'pdf':
             print('pdf')
             return [read_pdf(file_path)][0]  #, file_name]
         elif file_ext in ['docx', 'doc']:
